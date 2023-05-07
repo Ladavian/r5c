@@ -109,5 +109,5 @@ jobs:
         tag: ${{ env.latest_release }}
         commit: master
         replacesArtifacts: true
-        GITHUB_TOKEN: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+        GITHUB_TOKEN: ${{ secrets.workflow_token }}
         artifacts: rom/*
