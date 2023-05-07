@@ -5,15 +5,8 @@ name: Build releases
 #开启写权限，防止无法上传到release
 
 on:
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
-  schedule:
-    - cron: 0 22 */3 * * 
+  watch:
+    types: started
 
 jobs:
   build:
