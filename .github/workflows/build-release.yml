@@ -1,8 +1,15 @@
 name: Build releases
 
 on:
-  watch:
-    types: started
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+  schedule:
+    - cron: 0 22 */3 * * 
 
 jobs:
   build:
@@ -13,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         model:
-          #- nanopi-r4s
+          - nanopi-r4s
           - nanopi-r5s
-          #- x86_64
+          - x86_64
         tag:
           - type: rc
             version: openwrt-22.03
