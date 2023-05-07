@@ -1,9 +1,4 @@
 name: Build releases
-
-  permissions:
-    contents: write
-#开启写权限，防止无法上传到release
-
 on:
   watch:
     types: started
@@ -17,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         model:
-          - nanopi-r4s
+          #- nanopi-r4s
           - nanopi-r5s
           - x86_64
         tag:
