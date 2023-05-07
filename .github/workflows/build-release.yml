@@ -1,5 +1,9 @@
 name: Build releases
 
+  permissions:
+    contents: write
+#开启写权限，防止无法上传到release
+
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -114,5 +118,5 @@ jobs:
         tag: ${{ env.latest_release }}
         commit: master
         replacesArtifacts: true
-        token: ${{ secrets.workflow_token }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         artifacts: rom/*
