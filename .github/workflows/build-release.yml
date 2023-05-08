@@ -92,7 +92,12 @@ jobs:
           cp -a openwrt/bin/targets/x86/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum *gz > ../info/sha256sums.txt
         fi
-
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.build_date }}-${{ matrix.model }}-${{ matrix.tag.version }}
+        path: rom/*.gz
+        
     - name: Create release
       if: env.release != 'false'
       id: create_release
