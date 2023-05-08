@@ -15,7 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         model:
-          #- nanopi-r4s
           - nanopi-r5s
           - x86_64
         tag:
@@ -80,12 +79,7 @@ jobs:
       id: assemble_artifact
       run: |
         mkdir -p rom info
-        if [ "${{ matrix.model }}" = "nanopi-r4s" ]; then
-          cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
-          cp -a openwrt/bin/targets/rockchip/*/*-r4s.manifest info/manifest.txt
-          cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
-          cd rom && sha256sum *gz > ../info/sha256sums.txt
-        elif [ "${{ matrix.model }}" = "nanopi-r5s" ]; then
+        if [ "${{ matrix.model }}" = "nanopi-r5s" ]; then
           cp -a openwrt/bin/targets/rockchip/*/*.img.gz rom/
           cp -a openwrt/bin/targets/rockchip/*/*.manifest info/manifest.txt
           cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
