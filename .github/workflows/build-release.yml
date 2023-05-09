@@ -98,28 +98,15 @@ jobs:
         name: ${{ env.build_date }}-${{ matrix.model }}-${{ matrix.tag.version }}
         path: rom/*.gz
         
-    - name: 发布至release
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.workflow_token }}
+    - name: Create release
+      if: env.release != 'false'
+      id: create_release
+      uses: ncipollo/release-action@v1.11.1
       with:
-        name: OpenWRT-${{ env.latest_release }}
-        tag_name: ${{ env.latest_release }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
-
-    - name: 清理旧的workflow
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
-
-    - name: 删除旧的Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.workflow_token }}
+        name: OpenWrt-${{ env.latest_release }}
+        allowUpdates: true
+        tag: ${{ env.latest_release }}-6.3
+        commit: master
+        replacesArtifacts: true
+        token: ${{ secrets.workflow_token }}
+        artifacts: rom/*
