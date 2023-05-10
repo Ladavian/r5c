@@ -98,29 +98,28 @@ jobs:
         name: ${{ env.build_date }}-${{ matrix.model }}-${{ matrix.tag.version }}
         path: rom/*.gz
         
-    - name: 生成发布标签
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true' && steps.compile1.outputs.status == 'success' && !cancelled()
-      run: |
-        echo -e "ℹ 官方主线源码版本，当前是6.1内核\n🍃 少量插件" >> release.txt
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 上传固件发布
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.workflow_token }}
+   - name: Create release
+      if: env.release != 'false'
+      id: create_release
+      uses: ncipollo/release-action@v1.11.1
       with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
+        name: OpenWRT-${{ env.latest_release }}
+        allowUpdates: true
+        tag: ${{ env.latest_release }}
+        commit: master
+        replacesArtifacts: true
+        token: ${{ secrets.workflow_token }}
+        artifacts: rom/*
 
-    - name: 删除旧发布的固件
-      uses: dev-drprasad/delete-older-releases@v0.2.1
-      if: steps.compile1.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    - name: Release kmods
+      if: env.release_kmod == 'true'
+      id: release_kmod
+      uses: ncipollo/release-action@v1.11.1
       with:
-        keep_latest: 7
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.workflow_token }}
+        name: OpenWRT-${{ env.latest_release }}
+        allowUpdates: true
+        tag: ${{ env.latest_release }}
+        commit: master
+        replacesArtifacts: true
+        token: ${{ secrets.workflow_token }}
+        artifacts: openwrt/kmod-*.tar.gz
