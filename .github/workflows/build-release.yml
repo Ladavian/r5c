@@ -98,7 +98,7 @@ jobs:
         name: ${{ env.build_date }}-${{ matrix.model }}-${{ matrix.tag.version }}
         path: rom/*.gz
         
-   - name: Create release
+  - name: Create release
       if: env.release != 'false'
       id: create_release
       uses: ncipollo/release-action@v1.11.1
@@ -110,16 +110,3 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.workflow_token }}
         artifacts: rom/*
-
-    - name: Release kmods
-      if: env.release_kmod == 'true'
-      id: release_kmod
-      uses: ncipollo/release-action@v1.11.1
-      with:
-        name: OpenWRT-${{ env.latest_release }}
-        allowUpdates: true
-        tag: ${{ env.latest_release }}
-        commit: master
-        replacesArtifacts: true
-        token: ${{ secrets.workflow_token }}
-        artifacts: openwrt/kmod-*.tar.gz
